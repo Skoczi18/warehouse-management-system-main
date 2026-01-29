@@ -32,20 +32,14 @@
                               }
 }
 
-http://api.warehouse.local {
+api.warehouse.test {
     import api_common_headers
-    import cors http://dashboard.warehouse.local
+    import cors dashboard.warehouse.test
 
-    handle /api/v1* {
-        reverse_proxy {$API_HOST}:{$HTTP}
-    }
-
-    handle {
-        respond "Not found" 404
-    }
+    reverse_proxy host.docker.internal:8000
 }
 
-http://dashboard.warehouse.local {
+dashboard.warehouse.test {
     header {
         X-Content-Type-Options nosniff
         X-Frame-Options DENY

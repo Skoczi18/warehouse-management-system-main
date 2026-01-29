@@ -13,10 +13,10 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
-      - ./data/caddy-static:/static
-      - ./data/caddy:/data
-      - ./data/caddy-config:/config
+      - ./caddy/Caddyfile-dev:/etc/caddy/Caddyfile:ro
+      - ./data/caddy/static:/static
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
     networks:
       - internal
 
