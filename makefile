@@ -17,7 +17,7 @@ down:
 
 export-db:
 	echo "db: $$db..."; \
-	docker exec -t postgres \
+	docker exec -t warehouse-management-system-main-postgres-1 \
 		pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB) > $(BACKUP_DIR)/$(POSTGRES_DB).sql ; \
 	@echo "Done."
 
