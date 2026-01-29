@@ -30,3 +30,11 @@ import-db:
 		psql -U $(POSTGRES_USER) $(POSTGRES_DB) ; \
 	@echo "Done."
 
+
+domain-register:
+	chmod +x ./scripts/dev-domains.sh
+	./scripts/dev-domains.sh
+
+domain-trust:
+	chmod +x ./scripts/trust-caddy-ca.sh
+	./scripts/trust-caddy-ca.sh
