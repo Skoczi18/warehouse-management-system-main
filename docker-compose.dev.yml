@@ -1,0 +1,37 @@
+networks:
+  internal:
+    driver: bridge
+    name: warehouse-internal
+
+services:
+  caddy:
+    image: caddy:2.8.4
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - ./data/caddy-static:/static
+      - ./data/caddy:/data
+      - ./data/caddy-config:/config
+    networks:
+      - internal
+
+  postgres:
+    image: postgres:latest
+    env_file:
+      - .env
+    hostname: ${POSTGRES_HOST}
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+    ports:
+      - "${POSTGRES_EXTERNAL_PORT}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql:delegated
+    networks:
+      - internal

@@ -1,0 +1,55 @@
+(api_common_headers) {
+	header -Server
+	header -Alt-Svc
+}
+
+(cors) {
+    @cors{args[0]} header Origin {args[0]}
+    @preflight{args[0]} {
+                       method OPTIONS
+                       header Origin {args[0]}
+                       }
+
+    header @cors{args[0]} {
+                             Access-Control-Allow-Origin "{http.request.header.Origin}"
+                             Access-Control-Allow-Credentials "true"
+                             Access-Control-Expose-Headers "Content-Length, Content-Type"
+                             Vary "Origin"
+                             defer
+                         }
+
+    handle @preflight{args[0]} {
+                                  header {
+                                             Access-Control-Allow-Origin "{http.request.header.Origin}"
+                                             Access-Control-Allow-Credentials "true"
+                                             Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                                             Access-Control-Allow-Headers "{http.request.header.Access-Control-Request-Headers}"
+                                             Access-Control-Max-Age "3600"
+                                             Vary "Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+                                             defer
+                                         }
+                                  respond "" 204
+                              }
+}
+
+http://api.warehouse.local {
+    import api_common_headers
+    import cors http://dashboard.warehouse.local
+
+    handle /api/v1* {
+        reverse_proxy {$API_HOST}:{$HTTP}
+    }
+
+    handle {
+        respond "Not found" 404
+    }
+}
+
+http://dashboard.warehouse.local {
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+    reverse_proxy host.docker.internal:3000
+}

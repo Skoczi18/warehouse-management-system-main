@@ -1,0 +1,14 @@
+[project]
+name = "av-wms"
+version = "0.1.0"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "sqlalchemy>=2.0",
+  "psycopg",
+  "alembic",
+  "pydantic>=2.0",
+  "python-jose",
+  "passlib",
+  "python-dotenv"
+]
